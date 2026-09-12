@@ -29,7 +29,9 @@ void main() async {
 
   // 2. Compute key fingerprint and build trusted relationship record
   final rawPublicKey = utf8.encode('controller-ed25519-public-key-bytes');
-  final keyFingerprint = AiroCryptoUtils.computePublicKeyFingerprint(rawPublicKey);
+  final keyFingerprint = AiroCryptoUtils.computePublicKeyFingerprint(
+    rawPublicKey,
+  );
 
   final keyDescriptor = AiroTrustedDeviceKeyDescriptor(
     keyId: 'key-ctrl-01',
@@ -60,7 +62,9 @@ void main() async {
 
   // 3. Controller requests a playback ticket for an asset
   final ticketService = AiroFakePlaybackTicketService();
-  final sourceHandle = AiroPlaybackSourceHandle.redacted('encrypted-asset-token-7734');
+  final sourceHandle = AiroPlaybackSourceHandle.redacted(
+    'encrypted-asset-token-7734',
+  );
 
   final issueRequest = AiroPlaybackTicketIssueRequest(
     requestId: 'req-ticket-01',
@@ -112,7 +116,9 @@ void main() async {
 
   print('5. TV Receiver Redemption:');
   print('   Redeem Accepted: ${redeemDecision.accepted}');
-  print('   Redeem Codes: ${redeemDecision.codes.map((c) => c.stableId).join(', ')}\n');
+  print(
+    '   Redeem Codes: ${redeemDecision.codes.map((c) => c.stableId).join(', ')}\n',
+  );
 
   print('=== Workflow Complete ===');
 }

@@ -76,7 +76,8 @@ class AiroPairingChallenge extends Equatable {
         .toSet();
 
     return AiroPairingChallenge(
-      schemaVersion: (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
+      schemaVersion:
+          (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
       challengeId: json['challengeId'] as String,
       receiverDeviceId: json['receiverDeviceId'] as String,
       receiverRole: AiroDeviceRole.fromStableId(json['receiverRole'] as String),

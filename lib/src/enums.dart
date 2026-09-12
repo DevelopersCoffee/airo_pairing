@@ -53,7 +53,8 @@ enum AiroPairingChallengeStatus {
   static AiroPairingChallengeStatus fromStableId(String stableId) {
     return AiroPairingChallengeStatus.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroPairingChallengeStatus: $stableId'),
+      orElse: () =>
+          throw ArgumentError('Unknown AiroPairingChallengeStatus: $stableId'),
     );
   }
 }
@@ -72,7 +73,8 @@ enum AiroTrustedDeviceAccessCode {
   static AiroTrustedDeviceAccessCode fromStableId(String stableId) {
     return AiroTrustedDeviceAccessCode.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroTrustedDeviceAccessCode: $stableId'),
+      orElse: () =>
+          throw ArgumentError('Unknown AiroTrustedDeviceAccessCode: $stableId'),
     );
   }
 }
@@ -93,7 +95,8 @@ enum AiroTrustedDeviceTrustLevel {
   static AiroTrustedDeviceTrustLevel fromStableId(String stableId) {
     return AiroTrustedDeviceTrustLevel.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroTrustedDeviceTrustLevel: $stableId'),
+      orElse: () =>
+          throw ArgumentError('Unknown AiroTrustedDeviceTrustLevel: $stableId'),
     );
   }
 }
@@ -109,7 +112,9 @@ enum AiroTrustedDeviceKeyAlgorithm {
   static AiroTrustedDeviceKeyAlgorithm fromStableId(String stableId) {
     return AiroTrustedDeviceKeyAlgorithm.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroTrustedDeviceKeyAlgorithm: $stableId'),
+      orElse: () => throw ArgumentError(
+        'Unknown AiroTrustedDeviceKeyAlgorithm: $stableId',
+      ),
     );
   }
 }
@@ -128,7 +133,8 @@ enum AiroTrustedDeviceKeyState {
   static AiroTrustedDeviceKeyState fromStableId(String stableId) {
     return AiroTrustedDeviceKeyState.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroTrustedDeviceKeyState: $stableId'),
+      orElse: () =>
+          throw ArgumentError('Unknown AiroTrustedDeviceKeyState: $stableId'),
     );
   }
 }
@@ -151,7 +157,9 @@ enum AiroTrustedDeviceSecurityCode {
   static AiroTrustedDeviceSecurityCode fromStableId(String stableId) {
     return AiroTrustedDeviceSecurityCode.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroTrustedDeviceSecurityCode: $stableId'),
+      orElse: () => throw ArgumentError(
+        'Unknown AiroTrustedDeviceSecurityCode: $stableId',
+      ),
     );
   }
 }
@@ -176,7 +184,9 @@ enum AiroRestrictedReceiverAction {
   static AiroRestrictedReceiverAction fromStableId(String stableId) {
     return AiroRestrictedReceiverAction.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroRestrictedReceiverAction: $stableId'),
+      orElse: () => throw ArgumentError(
+        'Unknown AiroRestrictedReceiverAction: $stableId',
+      ),
     );
   }
 }
@@ -206,7 +216,9 @@ enum AiroRestrictedReceiverTrustCode {
   static AiroRestrictedReceiverTrustCode fromStableId(String stableId) {
     return AiroRestrictedReceiverTrustCode.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroRestrictedReceiverTrustCode: $stableId'),
+      orElse: () => throw ArgumentError(
+        'Unknown AiroRestrictedReceiverTrustCode: $stableId',
+      ),
     );
   }
 }
@@ -228,7 +240,9 @@ enum AiroPlaybackTicketValidationCode {
   static AiroPlaybackTicketValidationCode fromStableId(String stableId) {
     return AiroPlaybackTicketValidationCode.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroPlaybackTicketValidationCode: $stableId'),
+      orElse: () => throw ArgumentError(
+        'Unknown AiroPlaybackTicketValidationCode: $stableId',
+      ),
     );
   }
 }
@@ -246,7 +260,9 @@ enum AiroPlaybackTicketServiceAction {
   static AiroPlaybackTicketServiceAction fromStableId(String stableId) {
     return AiroPlaybackTicketServiceAction.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroPlaybackTicketServiceAction: $stableId'),
+      orElse: () => throw ArgumentError(
+        'Unknown AiroPlaybackTicketServiceAction: $stableId',
+      ),
     );
   }
 }
@@ -279,7 +295,9 @@ enum AiroPlaybackTicketServiceCode {
   static AiroPlaybackTicketServiceCode fromStableId(String stableId) {
     return AiroPlaybackTicketServiceCode.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroPlaybackTicketServiceCode: $stableId'),
+      orElse: () => throw ArgumentError(
+        'Unknown AiroPlaybackTicketServiceCode: $stableId',
+      ),
     );
   }
 }
@@ -298,7 +316,9 @@ enum AiroPlaybackSourceHandleRejectionCode {
   static AiroPlaybackSourceHandleRejectionCode fromStableId(String stableId) {
     return AiroPlaybackSourceHandleRejectionCode.values.firstWhere(
       (e) => e.stableId == stableId,
-      orElse: () => throw ArgumentError('Unknown AiroPlaybackSourceHandleRejectionCode: $stableId'),
+      orElse: () => throw ArgumentError(
+        'Unknown AiroPlaybackSourceHandleRejectionCode: $stableId',
+      ),
     );
   }
 }

@@ -43,11 +43,14 @@ class AiroRestrictedReceiverTrustDecision extends Equatable {
       'action': action.stableId,
       'codes': codes.map((c) => c.stableId).toList(),
       if (accessCode != null) 'accessCode': accessCode!.stableId,
-      if (playbackTicketCode != null) 'playbackTicketCode': playbackTicketCode!.stableId,
+      if (playbackTicketCode != null)
+        'playbackTicketCode': playbackTicketCode!.stableId,
     };
   }
 
-  factory AiroRestrictedReceiverTrustDecision.fromJson(Map<String, dynamic> json) {
+  factory AiroRestrictedReceiverTrustDecision.fromJson(
+    Map<String, dynamic> json,
+  ) {
     final codesList = (json['codes'] as List<dynamic>)
         .map((c) => AiroRestrictedReceiverTrustCode.fromStableId(c as String))
         .toList();
@@ -55,13 +58,19 @@ class AiroRestrictedReceiverTrustDecision extends Equatable {
     return AiroRestrictedReceiverTrustDecision(
       relationshipId: json['relationshipId'] as String,
       receiverDeviceId: json['receiverDeviceId'] as String,
-      action: AiroRestrictedReceiverAction.fromStableId(json['action'] as String),
+      action: AiroRestrictedReceiverAction.fromStableId(
+        json['action'] as String,
+      ),
       codes: codesList,
       accessCode: json['accessCode'] != null
-          ? AiroTrustedDeviceAccessCode.fromStableId(json['accessCode'] as String)
+          ? AiroTrustedDeviceAccessCode.fromStableId(
+              json['accessCode'] as String,
+            )
           : null,
       playbackTicketCode: json['playbackTicketCode'] != null
-          ? AiroPlaybackTicketValidationCode.fromStableId(json['playbackTicketCode'] as String)
+          ? AiroPlaybackTicketValidationCode.fromStableId(
+              json['playbackTicketCode'] as String,
+            )
           : null,
     );
   }

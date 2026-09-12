@@ -142,23 +142,36 @@ class AiroTrustedDeviceRecord extends Equatable {
         .toSet();
 
     return AiroTrustedDeviceRecord(
-      schemaVersion: (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
+      schemaVersion:
+          (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
       relationshipId: json['relationshipId'] as String,
       controllerDeviceId: json['controllerDeviceId'] as String,
       receiverDeviceId: json['receiverDeviceId'] as String,
-      controllerRole: AiroDeviceRole.fromStableId(json['controllerRole'] as String),
+      controllerRole: AiroDeviceRole.fromStableId(
+        json['controllerRole'] as String,
+      ),
       receiverRole: AiroDeviceRole.fromStableId(json['receiverRole'] as String),
       scopes: scopesList,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      notBefore: json['notBefore'] != null ? DateTime.parse(json['notBefore'] as String) : null,
-      expiresAt: json['expiresAt'] != null ? DateTime.parse(json['expiresAt'] as String) : null,
-      revokedAt: json['revokedAt'] != null ? DateTime.parse(json['revokedAt'] as String) : null,
+      notBefore: json['notBefore'] != null
+          ? DateTime.parse(json['notBefore'] as String)
+          : null,
+      expiresAt: json['expiresAt'] != null
+          ? DateTime.parse(json['expiresAt'] as String)
+          : null,
+      revokedAt: json['revokedAt'] != null
+          ? DateTime.parse(json['revokedAt'] as String)
+          : null,
       pairingChallengeId: json['pairingChallengeId'] as String?,
       trustLevel: json['trustLevel'] != null
-          ? AiroTrustedDeviceTrustLevel.fromStableId(json['trustLevel'] as String)
+          ? AiroTrustedDeviceTrustLevel.fromStableId(
+              json['trustLevel'] as String,
+            )
           : AiroTrustedDeviceTrustLevel.paired,
       keyDescriptor: json['keyDescriptor'] != null
-          ? AiroTrustedDeviceKeyDescriptor.fromJson(json['keyDescriptor'] as Map<String, dynamic>)
+          ? AiroTrustedDeviceKeyDescriptor.fromJson(
+              json['keyDescriptor'] as Map<String, dynamic>,
+            )
           : null,
       revokedByDeviceId: json['revokedByDeviceId'] as String?,
       revocationReason: json['revocationReason'] as String?,
@@ -341,7 +354,9 @@ class AiroTrustedDeviceSecurityBlocker extends Equatable {
     return AiroTrustedDeviceSecurityBlocker(
       code: AiroTrustedDeviceSecurityCode.fromStableId(json['code'] as String),
       accessCode: json['accessCode'] != null
-          ? AiroTrustedDeviceAccessCode.fromStableId(json['accessCode'] as String)
+          ? AiroTrustedDeviceAccessCode.fromStableId(
+              json['accessCode'] as String,
+            )
           : null,
       field: json['field'] as String?,
     );
@@ -370,7 +385,11 @@ class AiroTrustedDeviceSecurityResult extends Equatable {
 
   factory AiroTrustedDeviceSecurityResult.fromJson(Map<String, dynamic> json) {
     final list = (json['blockers'] as List<dynamic>)
-        .map((b) => AiroTrustedDeviceSecurityBlocker.fromJson(b as Map<String, dynamic>))
+        .map(
+          (b) => AiroTrustedDeviceSecurityBlocker.fromJson(
+            b as Map<String, dynamic>,
+          ),
+        )
         .toList();
     return AiroTrustedDeviceSecurityResult(blockers: list);
   }

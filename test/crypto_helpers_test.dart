@@ -4,16 +4,21 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Cryptographic Helpers & Signed Payload Tests', () {
-    test('computePublicKeyFingerprint returns a deterministic SHA-256 hex string', () {
-      final rawPublicKey = utf8.encode('ed25519-public-key-sample-bytes');
-      final fingerprint = AiroCryptoUtils.computePublicKeyFingerprint(rawPublicKey);
+    test(
+      'computePublicKeyFingerprint returns a deterministic SHA-256 hex string',
+      () {
+        final rawPublicKey = utf8.encode('ed25519-public-key-sample-bytes');
+        final fingerprint = AiroCryptoUtils.computePublicKeyFingerprint(
+          rawPublicKey,
+        );
 
-      expect(fingerprint.length, equals(64)); // 32-byte hex digest
-      expect(
-        fingerprint,
-        equals(AiroCryptoUtils.computePublicKeyFingerprint(rawPublicKey)),
-      );
-    });
+        expect(fingerprint.length, equals(64)); // 32-byte hex digest
+        expect(
+          fingerprint,
+          equals(AiroCryptoUtils.computePublicKeyFingerprint(rawPublicKey)),
+        );
+      },
+    );
 
     test('AiroSignedPayload creates, verifies, and round-trips via JSON', () {
       final secretKey = utf8.encode('secret-shared-key-32-bytes-long!');

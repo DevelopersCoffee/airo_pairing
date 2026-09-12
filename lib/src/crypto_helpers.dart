@@ -19,7 +19,11 @@ abstract class AiroCryptoUtils {
   }
 
   /// Verifies an HMAC-SHA256 base64 signature against a UTF-8 message string.
-  static bool verifyHmacSha256(String message, String signatureBase64, List<int> secretKeyBytes) {
+  static bool verifyHmacSha256(
+    String message,
+    String signatureBase64,
+    List<int> secretKeyBytes,
+  ) {
     final computedSignature = signHmacSha256(message, secretKeyBytes);
     return computedSignature == signatureBase64;
   }
@@ -65,7 +69,11 @@ class AiroSignedPayload extends Equatable {
   /// Verifies the payload signature using the given secret/public key.
   bool verifyHmac(List<int> secretKeyBytes) {
     final expectedMessage = '$keyId:$timestamp:${payload.trim()}';
-    return AiroCryptoUtils.verifyHmacSha256(expectedMessage, signatureBase64, secretKeyBytes);
+    return AiroCryptoUtils.verifyHmacSha256(
+      expectedMessage,
+      signatureBase64,
+      secretKeyBytes,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -81,11 +89,14 @@ class AiroSignedPayload extends Equatable {
 
   factory AiroSignedPayload.fromJson(Map<String, dynamic> json) {
     return AiroSignedPayload(
-      schemaVersion: (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
+      schemaVersion:
+          (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
       payload: json['payload'] as String,
       signatureBase64: json['signatureBase64'] as String,
       keyId: json['keyId'] as String,
-      algorithm: AiroTrustedDeviceKeyAlgorithm.fromStableId(json['algorithm'] as String),
+      algorithm: AiroTrustedDeviceKeyAlgorithm.fromStableId(
+        json['algorithm'] as String,
+      ),
       timestamp: DateTime.parse(json['timestamp'] as String),
     );
   }

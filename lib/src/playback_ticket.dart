@@ -183,17 +183,24 @@ class AiroPlaybackTicket extends Equatable {
         .toSet();
 
     return AiroPlaybackTicket(
-      schemaVersion: (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
+      schemaVersion:
+          (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
       ticketId: json['ticketId'] as String,
       receiverDeviceId: json['receiverDeviceId'] as String,
       sessionId: json['sessionId'] as String,
-      sourceHandle: AiroPlaybackSourceHandle.fromJson(json['sourceHandle'] as Map<String, dynamic>),
+      sourceHandle: AiroPlaybackSourceHandle.fromJson(
+        json['sourceHandle'] as Map<String, dynamic>,
+      ),
       scopes: scopesList,
       issuedAt: DateTime.parse(json['issuedAt'] as String),
       notBefore: DateTime.parse(json['notBefore'] as String),
       expiresAt: DateTime.parse(json['expiresAt'] as String),
-      revokedAt: json['revokedAt'] != null ? DateTime.parse(json['revokedAt'] as String) : null,
-      usedAt: json['usedAt'] != null ? DateTime.parse(json['usedAt'] as String) : null,
+      revokedAt: json['revokedAt'] != null
+          ? DateTime.parse(json['revokedAt'] as String)
+          : null,
+      usedAt: json['usedAt'] != null
+          ? DateTime.parse(json['usedAt'] as String)
+          : null,
     );
   }
 
@@ -238,9 +245,13 @@ class AiroPlaybackTicketValidationResult extends Equatable {
 
   Map<String, dynamic> toJson() => {'code': code.stableId};
 
-  factory AiroPlaybackTicketValidationResult.fromJson(Map<String, dynamic> json) {
+  factory AiroPlaybackTicketValidationResult.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return AiroPlaybackTicketValidationResult(
-      code: AiroPlaybackTicketValidationCode.fromStableId(json['code'] as String),
+      code: AiroPlaybackTicketValidationCode.fromStableId(
+        json['code'] as String,
+      ),
     );
   }
 

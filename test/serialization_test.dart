@@ -9,7 +9,10 @@ void main() {
         challengeId: 'ch-100',
         receiverDeviceId: 'tv-001',
         receiverRole: AiroDeviceRole.tvReceiver,
-        requestedScopes: {AiroPairingScope.playbackControl, AiroPairingScope.diagnostics},
+        requestedScopes: {
+          AiroPairingScope.playbackControl,
+          AiroPairingScope.diagnostics,
+        },
         issuedAt: now,
         expiresAt: now.add(const Duration(minutes: 5)),
         status: AiroPairingChallengeStatus.pending,
@@ -22,22 +25,25 @@ void main() {
       expect(recovered.status, equals(AiroPairingChallengeStatus.pending));
     });
 
-    test('AiroTrustedDeviceKeyDescriptor serializes and deserializes cleanly', () {
-      final now = DateTime.utc(2026, 9, 12, 12, 0, 0);
-      final key = AiroTrustedDeviceKeyDescriptor(
-        keyId: 'key-ed25519-1',
-        algorithm: AiroTrustedDeviceKeyAlgorithm.ed25519,
-        publicKeyFingerprint: 'a1b2c3d4e5f67890',
-        createdAt: now,
-        notBefore: now,
-        expiresAt: now.add(const Duration(days: 30)),
-      );
+    test(
+      'AiroTrustedDeviceKeyDescriptor serializes and deserializes cleanly',
+      () {
+        final now = DateTime.utc(2026, 9, 12, 12, 0, 0);
+        final key = AiroTrustedDeviceKeyDescriptor(
+          keyId: 'key-ed25519-1',
+          algorithm: AiroTrustedDeviceKeyAlgorithm.ed25519,
+          publicKeyFingerprint: 'a1b2c3d4e5f67890',
+          createdAt: now,
+          notBefore: now,
+          expiresAt: now.add(const Duration(days: 30)),
+        );
 
-      final json = key.toJson();
-      final recovered = AiroTrustedDeviceKeyDescriptor.fromJson(json);
+        final json = key.toJson();
+        final recovered = AiroTrustedDeviceKeyDescriptor.fromJson(json);
 
-      expect(recovered, equals(key));
-    });
+        expect(recovered, equals(key));
+      },
+    );
 
     test('AiroTrustedDeviceRecord serializes and deserializes cleanly', () {
       final now = DateTime.utc(2026, 9, 12, 12, 0, 0);
@@ -73,7 +79,9 @@ void main() {
         ticketId: 't-123',
         receiverDeviceId: 'tv-1',
         sessionId: 'sess-abc',
-        sourceHandle: AiroPlaybackSourceHandle.redacted('opaque-asset-handle-99'),
+        sourceHandle: AiroPlaybackSourceHandle.redacted(
+          'opaque-asset-handle-99',
+        ),
         scopes: {AiroPairingScope.playbackControl},
         issuedAt: now,
         notBefore: now,
@@ -115,7 +123,9 @@ void main() {
       );
 
       final redeemJson = redeemRequest.toJson();
-      final recoveredRedeem = AiroPlaybackTicketRedeemRequest.fromJson(redeemJson);
+      final recoveredRedeem = AiroPlaybackTicketRedeemRequest.fromJson(
+        redeemJson,
+      );
       expect(recoveredRedeem, equals(redeemRequest));
     });
 
@@ -127,7 +137,10 @@ void main() {
         expect(AiroPairingScope.fromStableId(scope.stableId), equals(scope));
       }
       for (final algo in AiroTrustedDeviceKeyAlgorithm.values) {
-        expect(AiroTrustedDeviceKeyAlgorithm.fromStableId(algo.stableId), equals(algo));
+        expect(
+          AiroTrustedDeviceKeyAlgorithm.fromStableId(algo.stableId),
+          equals(algo),
+        );
       }
     });
   });

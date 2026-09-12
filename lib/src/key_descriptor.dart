@@ -80,14 +80,19 @@ class AiroTrustedDeviceKeyDescriptor extends Equatable {
 
   factory AiroTrustedDeviceKeyDescriptor.fromJson(Map<String, dynamic> json) {
     return AiroTrustedDeviceKeyDescriptor(
-      schemaVersion: (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
+      schemaVersion:
+          (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
       keyId: json['keyId'] as String,
-      algorithm: AiroTrustedDeviceKeyAlgorithm.fromStableId(json['algorithm'] as String),
+      algorithm: AiroTrustedDeviceKeyAlgorithm.fromStableId(
+        json['algorithm'] as String,
+      ),
       publicKeyFingerprint: json['publicKeyFingerprint'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       notBefore: DateTime.parse(json['notBefore'] as String),
       expiresAt: DateTime.parse(json['expiresAt'] as String),
-      revokedAt: json['revokedAt'] != null ? DateTime.parse(json['revokedAt'] as String) : null,
+      revokedAt: json['revokedAt'] != null
+          ? DateTime.parse(json['revokedAt'] as String)
+          : null,
     );
   }
 

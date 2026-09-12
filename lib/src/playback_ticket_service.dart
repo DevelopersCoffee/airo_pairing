@@ -71,12 +71,15 @@ class AiroPlaybackTicketIssueRequest extends Equatable {
         .toSet();
 
     return AiroPlaybackTicketIssueRequest(
-      schemaVersion: (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
+      schemaVersion:
+          (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
       requestId: json['requestId'] as String,
       ticketId: json['ticketId'] as String,
       receiverDeviceId: json['receiverDeviceId'] as String,
       sessionId: json['sessionId'] as String,
-      sourceHandle: AiroPlaybackSourceHandle.fromJson(json['sourceHandle'] as Map<String, dynamic>),
+      sourceHandle: AiroPlaybackSourceHandle.fromJson(
+        json['sourceHandle'] as Map<String, dynamic>,
+      ),
       scopes: scopesList,
       issuerDeviceId: json['issuerDeviceId'] as String,
       issuedAt: DateTime.parse(json['issuedAt'] as String),
@@ -149,12 +152,15 @@ class AiroPlaybackTicketRedeemRequest extends Equatable {
 
   factory AiroPlaybackTicketRedeemRequest.fromJson(Map<String, dynamic> json) {
     return AiroPlaybackTicketRedeemRequest(
-      schemaVersion: (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
+      schemaVersion:
+          (json['schemaVersion'] as String?) ?? kAiroPairingSchemaVersion,
       requestId: json['requestId'] as String,
       ticketId: json['ticketId'] as String,
       receiverDeviceId: json['receiverDeviceId'] as String,
       sessionId: json['sessionId'] as String,
-      requiredScope: AiroPairingScope.fromStableId(json['requiredScope'] as String),
+      requiredScope: AiroPairingScope.fromStableId(
+        json['requiredScope'] as String,
+      ),
       redeemedAt: DateTime.parse(json['redeemedAt'] as String),
     );
   }
@@ -206,13 +212,17 @@ class AiroPlaybackTicketServiceDecision extends Equatable {
     };
   }
 
-  factory AiroPlaybackTicketServiceDecision.fromJson(Map<String, dynamic> json) {
+  factory AiroPlaybackTicketServiceDecision.fromJson(
+    Map<String, dynamic> json,
+  ) {
     final codesList = (json['codes'] as List<dynamic>)
         .map((c) => AiroPlaybackTicketServiceCode.fromStableId(c as String))
         .toList();
 
     return AiroPlaybackTicketServiceDecision(
-      action: AiroPlaybackTicketServiceAction.fromStableId(json['action'] as String),
+      action: AiroPlaybackTicketServiceAction.fromStableId(
+        json['action'] as String,
+      ),
       codes: codesList,
       ticket: json['ticket'] != null
           ? AiroPlaybackTicket.fromJson(json['ticket'] as Map<String, dynamic>)
