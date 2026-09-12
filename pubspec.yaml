@@ -1,6 +1,6 @@
 name: airo_pairing
 description: Trusted device pairing, secret ticket verification, and cross-device handoff contracts for Flutter.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/DevelopersCoffee/airo_pairing
 repository: https://github.com/DevelopersCoffee/airo_pairing
 issue_tracker: https://github.com/DevelopersCoffee/airo_pairing/issues
@@ -26,6 +26,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  crypto: ^3.0.3
   equatable: ^2.1.0
   flutter:
     sdk: flutter
