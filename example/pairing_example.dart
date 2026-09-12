@@ -4,14 +4,48 @@ import 'dart:convert';
 import 'package:airo_pairing/airo_pairing.dart';
 
 void main() async {
-  print('=== Airo Pairing End-to-End Workflow ===\n');
+  print('=== Airo Pairing v1.2.0 Ecosystem Orchestrator Example ===\n');
 
   final now = DateTime.utc(2026, 9, 12, 12, 0, 0);
 
-  // 1. Controller creates pairing challenge to pair with TV Receiver
+  // 1. Initialize bi-directional transport pair and in-memory storage adapters
+  final (clientTransport, serverTransport) =
+      AiroInMemoryTransportLayer.createPair();
+  final clientStorage = AiroInMemoryStorageAdapter();
+  final serverStorage = AiroInMemoryStorageAdapter();
+
+  final clientEngine = AiroPairingEngine(
+    transport: clientTransport,
+    storage: clientStorage,
+  );
+  final serverEngine = AiroPairingEngine(
+    transport: serverTransport,
+    storage: serverStorage,
+  );
+
+  // 2. Listen to reactive stream events
+  serverEngine.onChallengeReceived.listen((challenge) {
+    print(
+      '📡 [Server Engine] Received Pairing Challenge: ${challenge.challengeId}',
+    );
+  });
+
+  clientEngine.onPairingSuccess.listen((record) {
+    print(
+      '✅ [Client Engine] Pairing Success Event! Connected to ${record.receiverDeviceId}',
+    );
+  });
+
+  serverEngine.onTicketRedeemed.listen((decision) {
+    print(
+      '🎬 [Server Engine] Ticket Redeemed Event! Ticket ID: ${decision.ticket?.ticketId}',
+    );
+  });
+
+  // 3. Client initiates pairing challenge over transport channel
   final challenge = AiroPairingChallenge(
-    challengeId: 'ch-9001',
-    receiverDeviceId: 'airo-tv-livingroom-01',
+    challengeId: 'ch-v1.2.0-001',
+    receiverDeviceId: 'airo-tv-livingroom',
     receiverRole: AiroDeviceRole.tvReceiver,
     requestedScopes: {
       AiroPairingScope.playbackControl,
@@ -22,28 +56,25 @@ void main() async {
     expiresAt: now.add(const Duration(minutes: 5)),
   );
 
-  print('1. Pairing Challenge Issued:');
-  print('   Challenge ID: ${challenge.challengeId}');
-  print('   Receiver: ${challenge.receiverDeviceId}');
-  print('   Can Approve: ${challenge.canApproveAt(now)}\n');
+  print('1. Client Engine sending challenge over transport...');
+  await clientEngine.sendChallenge(challenge);
+  await Future<void>.delayed(const Duration(milliseconds: 50));
 
-  // 2. Compute key fingerprint and build trusted relationship record
-  final rawPublicKey = utf8.encode('controller-ed25519-public-key-bytes');
-  final keyFingerprint = AiroCryptoUtils.computePublicKeyFingerprint(
-    rawPublicKey,
-  );
+  // 4. Server approves challenge and registers relationship record
+  final rawPublicKey = utf8.encode('controller-public-key-bytes');
+  final fingerprint = AiroCryptoUtils.computePublicKeyFingerprint(rawPublicKey);
 
   final keyDescriptor = AiroTrustedDeviceKeyDescriptor(
-    keyId: 'key-ctrl-01',
+    keyId: 'key-ctrl-v12',
     algorithm: AiroTrustedDeviceKeyAlgorithm.ed25519,
-    publicKeyFingerprint: keyFingerprint,
+    publicKeyFingerprint: fingerprint,
     createdAt: now,
     notBefore: now,
     expiresAt: now.add(const Duration(days: 90)),
   );
 
   final relationship = AiroTrustedDeviceRecord(
-    relationshipId: 'rel-ctrl-tv-01',
+    relationshipId: 'rel-ctrl-tv-v12',
     controllerDeviceId: 'mobile-controller-alex',
     receiverDeviceId: challenge.receiverDeviceId,
     controllerRole: AiroDeviceRole.mobileController,
@@ -55,23 +86,19 @@ void main() async {
     pairingChallengeId: challenge.challengeId,
   );
 
-  print('2. Trusted Device Relationship Established:');
-  print('   Relationship ID: ${relationship.relationshipId}');
-  print('   Key Fingerprint: ${keyDescriptor.publicKeyFingerprint}');
-  print('   Trust Level: ${relationship.trustLevel.name}\n');
+  print('\n2. Server Engine approving challenge & saving to storage...');
+  await serverEngine.approveChallenge(challenge, relationship);
+  await Future<void>.delayed(const Duration(milliseconds: 50));
 
-  // 3. Controller requests a playback ticket for an asset
-  final ticketService = AiroFakePlaybackTicketService();
-  final sourceHandle = AiroPlaybackSourceHandle.redacted(
-    'encrypted-asset-token-7734',
-  );
-
+  // 5. Client requests playback ticket & signs container
   final issueRequest = AiroPlaybackTicketIssueRequest(
-    requestId: 'req-ticket-01',
-    ticketId: 'ticket-play-01',
+    requestId: 'req-ticket-v12',
+    ticketId: 'ticket-play-v12',
     receiverDeviceId: challenge.receiverDeviceId,
-    sessionId: 'session-stream-99',
-    sourceHandle: sourceHandle,
+    sessionId: 'session-stream-v12',
+    sourceHandle: AiroPlaybackSourceHandle.redacted(
+      'encrypted-asset-token-v12',
+    ),
     scopes: {AiroPairingScope.playbackControl},
     issuerDeviceId: relationship.controllerDeviceId,
     issuedAt: now,
@@ -79,17 +106,13 @@ void main() async {
     expiresAt: now.add(const Duration(minutes: 3)),
   );
 
-  final issueDecision = await ticketService.issue(
-    request: issueRequest,
-    issuer: relationship,
+  final issueDecision = await clientEngine.requestTicket(
+    issueRequest,
+    relationship,
     now: now,
   );
+  print('\n3. Ticket Issued via Engine: ID ${issueDecision.ticket?.ticketId}');
 
-  print('3. Playback Ticket Issuance:');
-  print('   Issued Accepted: ${issueDecision.accepted}');
-  print('   Ticket ID: ${issueDecision.ticket?.ticketId}\n');
-
-  // 4. Sign ticket payload using HMAC
   final secretKeyBytes = utf8.encode('shared-session-secret-key-32bytes');
   final signedPayload = AiroSignedPayload.createHmac(
     payload: jsonEncode(issueDecision.ticket!.toJson()),
@@ -98,27 +121,28 @@ void main() async {
     timestamp: now,
   );
 
-  print('4. Ticket Payload Signed & Transmitted:');
-  print('   Signature Base64: ${signedPayload.signatureBase64}');
-  print('   Signature Valid: ${signedPayload.verifyHmac(secretKeyBytes)}\n');
+  print('4. Signed Ticket Payload Container:');
+  print('   Signature Valid: ${signedPayload.verifyHmac(secretKeyBytes)}');
 
-  // 5. TV Receiver redeems the playback ticket
+  // 6. TV Receiver redeems playback ticket via Engine
   final redeemRequest = AiroPlaybackTicketRedeemRequest(
-    requestId: 'req-redeem-01',
+    requestId: 'req-redeem-v12',
     ticketId: issueDecision.ticket!.ticketId,
     receiverDeviceId: challenge.receiverDeviceId,
-    sessionId: 'session-stream-99',
+    sessionId: 'session-stream-v12',
     requiredScope: AiroPairingScope.playbackControl,
     redeemedAt: now.add(const Duration(seconds: 10)),
   );
 
-  final redeemDecision = await ticketService.redeem(request: redeemRequest);
+  print('\n5. TV Receiver redeeming ticket via Engine...');
+  await clientEngine.redeemTicket(redeemRequest);
+  await Future<void>.delayed(const Duration(milliseconds: 50));
 
-  print('5. TV Receiver Redemption:');
-  print('   Redeem Accepted: ${redeemDecision.accepted}');
-  print(
-    '   Redeem Codes: ${redeemDecision.codes.map((c) => c.stableId).join(', ')}\n',
-  );
+  // Clean up
+  await clientEngine.close();
+  await serverEngine.close();
+  await clientStorage.close();
+  await serverStorage.close();
 
-  print('=== Workflow Complete ===');
+  print('\n=== Orchestration Workflow Complete ===');
 }
